@@ -12,9 +12,18 @@ args = parser.parse_args()
 import os, sys
 import numpy as np
 import ROOT as r
-from millisim.Environment import Environment
-from millisim.Integrator import Integrator
-from millisim.Detector import *
+
+sys.path.append('./MilliqanSim')
+#sys.path.append('./MilliqanSim/millisim')
+#from millisim.Environment import Environment
+#from millisim.Integrator import Integrator
+#from millisim.Detector import *
+
+#
+from MilliqanSim.millisim.Environment import Environment
+from MilliqanSim.millisim.Integrator import Integrator
+from MilliqanSim.millisim.Detector import *
+
 from configs import *
 try:
     from tqdm import tqdm
@@ -37,13 +46,14 @@ else:
 #########################
 
 # For grid submissions. Do not put bfield file in tarball to avoid large file transfers, so gfal-copy from hadoop here
-if not os.path.exists("MilliqanSim/bfield/bfield_coarse.pkl"):
-    os.system("mkdir -p MilliqanSim/bfield")
-    os.system("gfal-copy -p -f -t 4200 --verbose gsiftp://gftp.t2.ucsd.edu/hadoop/cms/store/user/bemarsh/milliqan/bfield/bfield_coarse.pkl.tar.xz file://{0}/MilliqanSim/bfield/bfield_coarse.pkl.tar.xz".format(os.getcwd()))
-    os.system("tar xf MilliqanSim/bfield/bfield_coarse.pkl.tar.xz -C MilliqanSim/bfield/")
+#if not os.path.exists("MilliqanSim/bfield/bfield_coarse.pkl"):
+#    os.system("mkdir -p MilliqanSim/bfield")
+#    os.system("gfal-copy -p -f -t 4200 --verbose gsiftp://gftp.t2.ucsd.edu/hadoop/cms/store/user/bemarsh/milliqan/bfield/bfield_coarse.pkl.tar.xz file://{0}/MilliqanSim/bfield/bfield_coarse.pkl.tar.xz".format(os.getcwd()))
+#    os.system("tar xf MilliqanSim/bfield/bfield_coarse.pkl.tar.xz -C MilliqanSim/bfield/")
 
 bFile = "MilliqanSim/bfield/bfield_coarse.pkl"
-if pyVersion == 3: bFile = "MilliqanSim/bfield/bfield_coarse_p3.pkl"
+#if pyVersion == 3: bFile = "MilliqanSim/bfield/bfield_coarse_p3.pkl"
+if pyVersion == 3: bFile = "/net/cms11/data/hmei/milliqan/bfield/bfield_coarse_p3.pkl"
 env = Environment(
     mat_setup = cfg.mat_setup,
     bfield = cfg.bfield,
@@ -203,6 +213,7 @@ for i in it:
             x0 = 1000.*np.array([0., 0., 0., p4.Px(), p4.Py(), p4.Pz()])
             # traj,_ = itg.propagate(x0)
             traj,tvec = itg.propagate(x0, fast=True, fast_seed=seed)
+            #traj,tvec = itg.propagate(x0, fast=False, fast_seed=seed)
             idict = det.find_intersection(traj)
             bars_intersects = mdet.find_entries_exits(traj)
             slabs_intersects = [slab.find_intersection(traj) for slab in slabs]

@@ -68,27 +68,25 @@ int init(int production_mode, MCPTree &outtree){
 
     }else if(production_mode == 2){
         if (run3) {
-	  std::cout << "Wjets not implemented for Run 3 yet" << std::endl;
-	  std::abort();
+	  f = new TFile("data/run3/WJets_CutPtSpect_run3.root");
 	} else {
-	  f = new TFile("data/WJets_CutPtSpect_v2.root");
+	  f = new TFile("data/run2/WJets_CutPtSpect_v2.root");
 	}
         h_pt = (TH1D*)f->Get("pt");
         outtree.xsec = h_pt->Integral() / 1000;
-        // This includes eta [-0.025, 0.025];
-        outtree.xsec *= (MUON_ETAMAX - MUON_ETAMIN) / (2*0.025);
+        // This includes eta [-0.5, 0.5];
+        outtree.xsec *= (MUON_ETAMAX - MUON_ETAMIN) / (2*0.5);
         outtree.xsec *= (MUON_PHIMAX - MUON_PHIMIN) / (2*3.14159265);
     }else if(production_mode == 3){
         if (run3) {
-	  std::cout << "DY not implemented for Run 3 yet" << std::endl;
-	  std::abort();
+	  f = new TFile("data/run3/DY_CutPtSpect_run3.root");
 	} else {
-	  f = new TFile("data/DY_CutPtSpect_v2.root");
+	  f = new TFile("data/run2/DY_CutPtSpect_v2.root");
 	}
         h_pt = (TH1D*)f->Get("pt");
         outtree.xsec = h_pt->Integral() / 1000;
-        // This includes eta [-0.025, 0.025];
-        outtree.xsec *= (MUON_ETAMAX - MUON_ETAMIN) / (2*0.025);
+        // This includes eta [-0.5, 0.5];
+        outtree.xsec *= (MUON_ETAMAX - MUON_ETAMIN) / (2*0.5);
         outtree.xsec *= (MUON_PHIMAX - MUON_PHIMIN) / (2*3.14159265);
     }else if(production_mode == 4){
         if (run3) {

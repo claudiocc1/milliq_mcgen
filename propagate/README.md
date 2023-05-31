@@ -42,3 +42,23 @@ whether the branch is for the positively or negatively charged mCP):
 * `hit_*_line`: boolean indicating whether the mCP trajectory passes through 3 bars in a straight line. This is nominally how we characterize a "signal-like" event
 * `hit_*_bar_idxs`: list of bar indices that the mCP hits, in the order that it passes through them
 * `hit_*_bar_dists`: distance traversed within the bar for each of the bar indices above
+
+**How to run at UCSB cluster**
+
+* Currently cms11 at UCSB has condor installed, with about 500 cores usable
+* To use `ROOT` and `numba` for the fast integration (`MilliqanSim/millisim/fast_integrate.py`) a python environment could be made using [micromamba](https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html)
+    - Here is an example how
+    ```
+    # install first
+    curl micro.mamba.pm/install.sh | bash
+
+    # set up needed packages
+    micromamba create python=3.6 -n milliqan_sim root numba=0.53.1 -c conda-forge
+    micromamba install scipy                                        
+    micromamba activate milliqan_sim                                
+    ```
+    ** it is then used in `propagate/batchsubmit/wrapper_ucsb.sh`
+
+* When submitting, go to batchsubmit dir in cms11
+    - python makeMuonConfigFile_ucsb.py # make changes inside as needed
+    - source submit_all.sh configs

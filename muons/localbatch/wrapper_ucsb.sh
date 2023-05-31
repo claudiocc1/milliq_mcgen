@@ -32,20 +32,6 @@ echo "[wrapper] uname -a:" `uname -a`
 #    echo "ERROR! Couldn't find $OSGVO_CMSSW_Path/cmsset_default.sh or /cvmfs/cms.cern.ch/cmsset_default.sh or $OSG_APP/cmssoft/cms/cmsset_default.sh"
 #    exit 1
 #fi
-source /cvmfs/cms.cern.ch/cmsset_default.sh  > /dev/null 2>&1
-
-
-export SCRAM_ARCH=slc6_amd64_gcc630
-CMSSW_VERSION=CMSSW_9_4_14
-
-echo "[wrapper] SCRAM_ARCH" $SCRAM_ARCH
-echo "[wrapper] CMSSW_VERSION" $CMSSW_VERSION
-
-###version using cvmfs install of CMSSW
-echo "[wrapper] setting env"
-cd /cvmfs/cms.cern.ch/$SCRAM_ARCH/cms/cmssw/$CMSSW_VERSION/
-cmsenv
-cd -
 
 echo
 
@@ -56,10 +42,12 @@ echo "[wrapper] linux timestamp = " `date +%s`
 #
 # untar input sandbox
 #
-
-TMPDIR=output_${DECAYMODE}${FILEID}
-mkdir $TMPDIR
-mv input.tar.xz $TMPDIR
+DESTDIR="/homes/hmei/tmp"
+TMPDIR=${DESTDIR}output_${DECAYMODE}${FILEID}
+mkdir -p $TMPDIR
+echo "current dir is: "$PWD
+#cp ./input.tar.xz $DESTDIR
+cp $PWD/input.tar.xz $TMPDIR
 cd $TMPDIR
 
 echo "[wrapper] extracting input sandbox"
@@ -68,9 +56,8 @@ tar -xJf input.tar.xz
 echo "[wrapper] input contents are"
 ls -a
 
-#cd muons
-
-
+source ~/.bashrc
+micromamba activate milliqan_sim_2
 
 #
 # run it
@@ -99,9 +86,7 @@ if [ ! -d "${COPYDIR}" ]; then
     mkdir ${COPYDIR}
 fi
 
-substr="/ceph/cms"
-COPYDIR_CEPH=${COPYDIR#$substr}
-env -i X509_USER_PROXY=${X509_USER_PROXY} gfal-copy -p -f -t 4200 --verbose  --checksum ADLER32 file://`pwd`/$OUTFILE davs://redirector.t2.ucsd.edu:1095/${COPYDIR_CEPH}/output_${FILEID}.root
+cp $OUTFILE ${COPYDIR}/output_${FILEID}.root 
 
 echo "[wrapper] cleaning up"
 cd ../..

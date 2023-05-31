@@ -41,3 +41,5 @@ in the case that the sample is split over many files (see above)
 I've now added scripts to `localbatch` to do all of the above with a single condor submission, allowing for larger samples and far less babysiting.
 To run on the grid, create a input tarball first with: `./createTar.sh`, then run `python make_config.py`.
 You may want to configure some output directories and tags / njobs / etc. inside `make_config.py`. After the production completed successfully, if you wish, you can cleanup the logs with the `cleanup.py` script.
+
+* for things to run at UCSB cluster, one could use `make_config_ucsb.py` and `wrapper_ucsb.sh`
